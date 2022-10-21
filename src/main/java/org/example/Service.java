@@ -18,11 +18,21 @@ public class Service implements StringList{
         checkIndex(index);
         if (capasity >= element.length) {
             throw  new IllegalArgumentException("Нет места");
+            // grow();  3е задание
         }
+       // System.arraycopy(element,index,element,index +1,capasity-1);// 3е задание
+       // capasity++;
         for (int i = element.length - 1; i >= index+1; i--) {
             element[i] = element[i-1];
         }
         return element[index] = item;
+    }
+
+    //3е задание:
+    private void grow() {
+        Integer[] newElement = new Integer[(int) (element.length * 1.5D)];
+        System.arraycopy(element,0,newElement,0,capasity);
+        this.element = newElement;
     }
 
     @Override
@@ -66,13 +76,13 @@ public class Service implements StringList{
     public boolean contains(Integer item) {
        checkIten(item);
        Integer[]  arrayForSearch = toArray();
-       sortInsertion(arrayForSearch);
+       sortInsertion(arrayForSearch);  //3е задание: mergeSort( arrayForSearch);
        int min = 0;
        int max = arrayForSearch.length -1;
         while (min <= max) {
             int mid = (min + max)/2;
             if (item.equals(arrayForSearch[mid])) {
-                return true
+                return true;
             }
             if (item < arrayForSearch[mid]) {
                 max = mid - 1;
@@ -168,6 +178,47 @@ public class Service implements StringList{
                 j--;
             }
             arr[j]= temp;
+        }
+    }
+// 3е задание
+    private static void mergeSort(Integer[] arr) {
+        if (arr.length < 2) {
+            return;
+        }
+        int mid = arr.length / 2;
+        Integer[] left = new Integer[mid];
+        Integer[] right = new Integer[arr.length - mid];
+
+        for (int i = 0; i < left.length; i++) {
+            left[i] = arr[i];
+        }
+
+        for (int i = 0; i < right.length; i++) {
+            right[i] = arr[mid + i];
+        }
+
+        mergeSort(left);
+        mergeSort(right);
+
+        merge(arr, left, right);
+    }
+    public static void merge(Integer[] arr, Integer[] left, Integer[] right) {
+
+        int mainP = 0;
+        int leftP = 0;
+        int rightP = 0;
+        while (leftP < left.length && rightP < right.length) {
+            if (left[leftP] <= right[rightP]) {
+                arr[mainP++] = left[leftP++];
+            } else {
+                arr[mainP++] = right[rightP++];
+            }
+        }
+        while (leftP < left.length) {
+            arr[mainP++] = left[leftP++];
+        }
+        while (rightP < right.length) {
+            arr[mainP++] = right[rightP++];
         }
     }
 }
